@@ -1,6 +1,7 @@
 var util = require('util');
 var _ = require('lodash');
 var builder = require('botbuilder');
+var formatCurrency = require('format-currency');
 
 const defaultSettings = {
     pageSize: 5,
@@ -274,6 +275,32 @@ function create(settings) {
             }
         });
     }
+
+    function productAdCard(product) {
+        const opts = { format: '%s%v', symbol: '$', locale: 'es-CL' };
+        var buttonMel = new builder.CardAction().type('openUrl').title('Ir Mercado Libre').value(product.permalink)
+      
+        var item = new builder.ReceiptItem()
+                .image(new builder.CardImage().url(product.thumbnail))
+                .quantity(1)
+                .price(formatCurrency(product.price, opts))
+        
+        var card = new builder.ReceiptCard()
+            .title(product.title)
+            .items([item])
+            .total(formatCurrency(product.price, opts))
+            .buttons([buttonMel]);
+ 
+        if (product.installments) {
+            var d = product.installments;
+            var fact = new builder.Fact().key(`${d.quantity} cuotas sin interes con Mercado pago`).value(formatCurrency(d.amount, opts));
+            card.facts([fact]);
+        }
+
+        return card; 
+    
+    }  
+   
 
     function searchHitAsCard(showSave, searchHit) {
         var buttons = showSave
