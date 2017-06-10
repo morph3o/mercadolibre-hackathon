@@ -5,7 +5,7 @@ var restify = require('restify');
 
 /// <reference path="../SearchDialogLibrary/index.d.ts" />
 var SearchLibrary = require('../SearchDialogLibrary');
-var AzureSearch = require('../SearchProviders/azure-search');
+var MercadoLibreSearch = require('../SearchProviders/mercadolibre-search');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -35,14 +35,14 @@ var bot = new builder.UniversalBot(connector, [
 ]);
 
 // Azure Search
-var azureSearchClient = AzureSearch.create('realestate', '82BCF03D2FC9AC7F4E9D7DE1DF3618A5', 'listings');
-var realStateResultsMapper = SearchLibrary.defaultResultsMapper(realstateToSearchHit);
+var mercadoLibreSearchClient = MercadoLibreSearch.create('tucolegio_bot', 'c097bca6-7afe-4987-a6ea-10a40629206d', 'listings');
+var itemsResultsMapper = SearchLibrary.defaultResultsMapper(itemToSearchHit);
 
 // Register Search Dialogs Library with bot
 bot.library(SearchLibrary.create({
     multipleSelection: true,
-    search: function (query) { return azureSearchClient.search(query).then(realStateResultsMapper); },
-    refiners: ['region', 'city', 'type'],
+    search: function (query) { return mercadoLibreSearchClient.search(query).then(itemsResultsMapper); },
+    refiners: [],
     refineFormatter: function (refiners) {
         return _.zipObject(
             refiners.map(function (r) { return 'By ' + _.capitalize(r); }),
@@ -51,12 +51,11 @@ bot.library(SearchLibrary.create({
 }));
 
 // Maps the AzureSearch RealState Document into a SearchHit that the Search Library can use
-function realstateToSearchHit(realstate) {
+function itemToSearchHit(item) {
     return {
-        key: realstate.listingId,
-        title: util.format('%d bedroom, %d bath in %s, $%s',
-            realstate.beds, realstate.baths, realstate.city, realstate.price.toFixed(2)),
-        description: realstate.description,
-        imageUrl: realstate.thumbnail
+        key: item.id,
+        title: item.title,
+        description: item.price,
+        imageUrl: item.thumbnail
     };
 }
