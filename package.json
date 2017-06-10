@@ -21,14 +21,17 @@
     "url": "https://github.com/Microsoft/BotBuilder-Samples.git"
   },
   "dependencies": {
+    "azure": "^2.0.0-preview",
     "bluebird": "^3.4.7",
     "botbuilder": "^3.7.0",
     "dotenv-extended": "^1.0.4",
+    "format-currency": "^1.0.0",
     "lodash": "^4.17.4",
     "lorem-ipsum": "^1.0.3",
     "mercadolibre": "0.0.13",
     "request": "^2.79.0",
     "restify": "^4.3.0",
+    "serverless": "^1.15.2",
     "uuid": "^3.0.1"
   }
 }
