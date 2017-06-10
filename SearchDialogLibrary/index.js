@@ -275,7 +275,7 @@ function create(settings) {
 
     function productAdCard(product) {
         const opts = { format: '%s%v', symbol: '$', locale: 'es-CL' };
-        var buttonMel = new builder.CardAction().type('openUrl').title('Ir Mercado Libre').value(product.permalink)
+        var buttonMel = new builder.CardAction().type('openUrl').title('Ir a Mercado Libre').value(product.permalink)
       
         var item = new builder.ReceiptItem()
                 .image(new builder.CardImage().url(product.thumbnail))
