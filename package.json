@@ -23,7 +23,7 @@
   "dependencies": {
     "azure": "^2.0.0-preview",
     "bluebird": "^3.4.7",
-    "botbuilder": "^3.7.0",
+    "botbuilder": "3.8.4",
     "dotenv-extended": "^1.0.4",
     "format-currency": "^1.0.0",
     "lodash": "^4.17.4",
