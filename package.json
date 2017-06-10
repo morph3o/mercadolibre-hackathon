@@ -26,6 +26,7 @@
     "dotenv-extended": "^1.0.4",
     "lodash": "^4.17.4",
     "lorem-ipsum": "^1.0.3",
+    "mercadolibre": "0.0.13",
     "request": "^2.79.0",
     "restify": "^4.3.0",
     "uuid": "^3.0.1"
