@@ -52,10 +52,11 @@ bot.library(SearchLibrary.create({
 
 // Maps the AzureSearch RealState Document into a SearchHit that the Search Library can use
 function itemToSearchHit(item) {
-    return {
+    return item;
+    /*return {
         key: item.id,
         title: item.title,
         description: item.price,
         imageUrl: item.thumbnail
-    };
+    };*/
 }

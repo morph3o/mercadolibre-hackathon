@@ -94,14 +94,11 @@ function create(settings) {
                 var reply = new builder.Message(session)
                     .text('Here are a few good options I found:')
                     .attachmentLayout(builder.AttachmentLayout.carousel)
-                    .attachments(results.map(searchHitAsCard.bind(null, true)));
+                    .attachments(results.map(productAdCard.bind(null)));
 
                 session.send(reply);
 
-                session.send(settings.multipleSelection ?
-                    'You can select one or more to add to your list, *list* what you\'ve selected so far, *refine* these results, see *more* or search *again*.' :
-                    'You can select one, *refine* these results, see *more* or search *again*.');
-
+                
             })
             .matches(/again|reset/i, (session) => {
                 // Restart
@@ -291,10 +288,17 @@ function create(settings) {
             .total(formatCurrency(product.price, opts))
             .buttons([buttonMel]);
  
+         var factAvailable = new builder.Fact().key("Disponibles").value(product.available_quantity);
+         var factSold = new builder.Fact().key("Vendidas").value(product.sold_quantity);
+         var factSeller =  new builder.Fact().key("Categoría").value(product.seller.power_seller_status);
+        
+
         if (product.installments) {
             var d = product.installments;
-            var fact = new builder.Fact().key(`${d.quantity} cuotas sin interes con Mercado pago`).value(formatCurrency(d.amount, opts));
-            card.facts([fact]);
+            let fact = new builder.Fact().key(`${d.quantity} cuotas sin interes de`).value(formatCurrency(d.amount, opts));
+             card.facts([factAvailable, factSold, factSeller, fact]); 
+        } else {
+            card.facts([factAvailable, factSold, factSeller]); 
         }
 
         return card; 
@@ -357,7 +361,7 @@ function create(settings) {
             var actions = selection.map((hit) => builder.CardAction.imBack(session, hit.title));
             var message = new builder.Message(session)
                 .text('Here\'s what you\'ve added to your list so far:')
-                .attachments(selection.map(searchHitAsCard.bind(null, false)))
+                .attachments(selection.map(productAdCard.bind(null)))
                 .attachmentLayout(builder.AttachmentLayout.list);
             session.send(message);
         }
