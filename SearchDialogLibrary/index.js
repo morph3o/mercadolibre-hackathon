@@ -134,14 +134,8 @@ function create(settings) {
                     }
 
                     var query = session.dialogData.query;
-                    if (settings.multipleSelection) {
-                        // Multi-select -> Continue?
-                        session.send('%s was added to your list!', hit.title);
-                        session.beginDialog('confirm-continue', { selection: selection, query: query });
-                    } else {
-                        // Single-select -> done!
-                        session.endDialogWithResult({ selection: selection, query: query });
-                    }
+                    session.endDialogWithResult({ selection: selection, query: query });
+                    
                 }
             }));
 
@@ -341,14 +335,10 @@ function create(settings) {
     }
 
     function searchPrompt(session) {
-        var prompt = 'What would you like to search for?';
+        var prompt = '¿Que te gustaría buscar?';
         if (session.dialogData.firstTimeDone) {
-            prompt = 'What else would you like to search for?';
-            if (settings.multipleSelection) {
-                prompt += ' You can also *list* all items you\'ve added so far.';
-            }
+            prompt = 'Te gustaría buscar algo más?';
         }
-
         session.dialogData.firstTimeDone = true;
         builder.Prompts.text(session, prompt);
     }

@@ -6,6 +6,7 @@ var restify = require('restify');
 /// <reference path="../SearchDialogLibrary/index.d.ts" />
 var SearchLibrary = require('../SearchDialogLibrary');
 var MercadoLibreSearch = require('../SearchProviders/mercadolibre-search');
+var CalendarioTestSearch = require('../SearchProviders/calendario-pruebas');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -24,13 +25,26 @@ server.post('/api/messages', connector.listen());
 var bot = new builder.UniversalBot(connector, [
     function (session) {
         // Trigger Search
-        SearchLibrary.begin(session);
-    },
-    function (session, args) {
-        // Process selected search results
-        session.send(
-            'Done! For future reference, you selected these properties: %s',
-            args.selection.map(function (i) { return i.key; }).join(', '));
+        if (session.message.text.match(/buscar/i)) {
+            SearchLibrary.begin(session);
+        }
+        if (session.message.text.match(/pruebas/i)) {
+            CalendarioTestSearch
+                .search({}).
+                then((result) => {
+                   var cards = [] 
+                   result.results.forEach( (item) => {
+                       var card = new builder.HeroCard(session)
+                            .title(item.title)
+                            .text(`el dia ${item.date}`)
+                       cards.push(card);
+                   });
+                   var reply = new builder.Message(session)
+                       .attachmentLayout(builder.AttachmentLayout.carousel)
+                       .attachments(cards);
+                   session.send(reply); 
+                });
+        }
     }
 ]);
 
@@ -53,10 +67,5 @@ bot.library(SearchLibrary.create({
 // Maps the AzureSearch RealState Document into a SearchHit that the Search Library can use
 function itemToSearchHit(item) {
     return item;
-    /*return {
-        key: item.id,
-        title: item.title,
-        description: item.price,
-        imageUrl: item.thumbnail
-    };*/
+   
 }

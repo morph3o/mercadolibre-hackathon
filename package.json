@@ -29,6 +29,7 @@
     "lodash": "^4.17.4",
     "lorem-ipsum": "^1.0.3",
     "mercadolibre": "0.0.13",
+    "moment": "^2.18.1",
     "request": "^2.79.0",
     "restify": "^4.3.0",
     "serverless": "^1.15.2",
